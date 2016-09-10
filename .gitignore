@@ -1,0 +1,6 @@
+.idea
+vendor
+tests/coverage
+tests/coverage.txt
+tests/profiling
+diff
