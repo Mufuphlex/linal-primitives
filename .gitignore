@@ -1,5 +1,5 @@
-.idea
 vendor
+.idea
 tests/coverage
 tests/coverage.txt
 tests/profiling
