@@ -8,7 +8,7 @@ class Matrix
 
     /**
      * @param array $data
-     * @return static
+     * @return Matrix
      */
     public static function fromArray(array $data)
     {
@@ -39,7 +39,7 @@ class Matrix
     /**
      * @param int $i
      * @param int $j
-     * @return numeric
+     * @return number
      */
     public function get($i, $j)
     {
@@ -49,7 +49,7 @@ class Matrix
     /**
      * @param int $i
      * @param int $j
-     * @param numeric $value
+     * @param number $value
      * @return $this
      */
     public function set($i, $j, $value)
@@ -71,7 +71,6 @@ class Matrix
      */
     public function getColsNum()
     {
-        //$cur = current($this->data);
         if ($this->getRowsNum() === 0) {
             return 0;
         }
@@ -96,7 +95,7 @@ class Matrix
     }
 
     /**
-     * @param numeric $value
+     * @param number $value
      * @return Matrix
      */
     public function multipleScalar($value)
@@ -115,6 +114,7 @@ class Matrix
     /**
      * @param Vector $vector
      * @return Vector
+     * @throws MatrixException
      */
     public function multipleVector(Vector $vector)
     {
