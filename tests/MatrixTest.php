@@ -192,4 +192,34 @@ class MatrixTest extends \PHPUnit_Framework_TestCase
             array(new Matrix(0, 0), true),
         );
     }
+
+    public function testGetRowAsArray()
+    {
+        $m = static::m();
+        $row = $m->getRowAsArray(0);
+        static::assertSame(array(1, 2), $row);
+        $row = $m->getRowAsArray(2);
+        static::assertSame(array(5, 6), $row);
+    }
+
+    public function testGetMaxFromColumn()
+    {
+        $m = static::m();
+        static::assertSame(5, $m->getMaxFromColumn(0));
+        static::assertSame(6, $m->getMaxFromColumn(1));
+    }
+
+    public function testGetMinFromColumn()
+    {
+        $m = static::m();
+        static::assertSame(1, $m->getMinFromColumn(0));
+        static::assertSame(2, $m->getMinFromColumn(1));
+    }
+
+    public function testGetAvgFromColumn()
+    {
+        $m = static::m();
+        static::assertSame(3, $m->getAvgFromColumn(0));
+        static::assertSame(4, $m->getAvgFromColumn(1));
+    }
 }

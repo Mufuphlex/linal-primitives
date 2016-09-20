@@ -2,9 +2,17 @@
 
 namespace Mufuphlex\LinalPrimitives;
 
+/**
+ * Class Matrix
+ * @package Mufuphlex\LinalPrimitives
+ */
 class Matrix
 {
+    /** @var array */
     protected $data = array();
+
+    /** @var array */
+    protected $columns = array();
 
     /**
      * @param array $data
@@ -36,6 +44,11 @@ class Matrix
         }
     }
 
+    public function __clone()
+    {
+        $this->resetColumns();
+    }
+
     /**
      * @param int $i
      * @param int $j
@@ -54,6 +67,7 @@ class Matrix
      */
     public function set($i, $j, $value)
     {
+        $this->resetColumns();
         $this->data[$i][$j] = $value;
         return $this;
     }
@@ -74,6 +88,7 @@ class Matrix
         if ($this->getRowsNum() === 0) {
             return 0;
         }
+
         return count($this->data[0]);
     }
 
@@ -176,7 +191,7 @@ class Matrix
     }
 
     /**
-     * @param numeric $value
+     * @param number $value
      * @return Matrix
      */
     public function divideScalar($value)
@@ -192,8 +207,15 @@ class Matrix
         return $result;
     }
 
+    /**
+     * @param Vector $vector
+     * @param int $colNum
+     * @return $this
+     */
     public function addColumn(Vector $vector, $colNum = 0)
     {
+        $this->columns = array();
+
         foreach ($vector->asArray() as $i => $value) {
             $this->data[$i][$colNum] = $value;
         }
@@ -201,18 +223,46 @@ class Matrix
         return $this;
     }
 
+    /**
+     * @param int $j
+     * @return Vector
+     */
     public function getColumn($j)
     {
-        $rowsNum = $this->getRowsNum();
-        $vector = new Vector($rowsNum);
-
-        for ($i = 0; $i < $rowsNum; $i++) {
-            $vector->set($i, $this->data[$i][$j]);
-        }
-
-        return $vector;
+        return Vector::fromArray($this->getColumnAsArray($j));
     }
 
+    /**
+     * @param int $i
+     * @return array
+     */
+    public function getRowAsArray($i)
+    {
+        return $this->data[$i];
+    }
+
+    /**
+     * @param int $j
+     * @return array
+     */
+    public function getColumnAsArray($j)
+    {
+        if (!isset($this->columns[$j])) {
+            $rowsNum = $this->getRowsNum();
+            $this->columns[$j] = array_fill(0, $rowsNum, null);
+
+            for ($i = 0; $i < $rowsNum; $i++) {
+                $this->columns[$j][$i] = $this->data[$i][$j];
+            }
+        }
+
+        return $this->columns[$j];
+    }
+
+    /**
+     * @param void
+     * @return bool
+     */
     public function isSquare()
     {
         return ($this->getRowsNum() === $this->getColsNum());
@@ -225,6 +275,10 @@ class Matrix
         }
     }
 
+    /**
+     * @param void
+     * @return Matrix
+     */
     public function transpose()
     {
         $result = new self($this->getColsNum(), $this->getRowsNum());
@@ -239,10 +293,48 @@ class Matrix
     }
 
     /**
+     * @param int $j
+     * @return number
+     */
+    public function getMaxFromColumn($j)
+    {
+        return max($this->getColumnAsArray($j));
+    }
+
+    /**
+     * @param int $j
+     * @return number
+     */
+    public function getMinFromColumn($j)
+    {
+        return min($this->getColumnAsArray($j));
+    }
+
+    /**
+     * @param int $j
+     * @return number
+     */
+    public function getAvgFromColumn($j)
+    {
+        $column = $this->getColumnAsArray($j);
+        return array_sum($column) / count($column);
+    }
+
+    /**
      * @return array
      */
     public function asArray()
     {
         return $this->data;
+    }
+
+    /**
+     * @param void
+     * @return $this
+     */
+    protected function resetColumns()
+    {
+        $this->columns = array();
+        return $this;
     }
 }
