@@ -2,6 +2,10 @@
 
 namespace Mufuphlex\LinalPrimitives;
 
+/**
+ * Class Vector
+ * @package Mufuphlex\LinalPrimitives
+ */
 class Vector extends Matrix
 {
     /**
@@ -24,6 +28,10 @@ class Vector extends Matrix
         parent::__construct($size, 1);
     }
 
+    /**
+     * @param int $i
+     * @return number
+     */
     public function get($i)
     {
         return parent::get($i, 0);
@@ -36,7 +44,8 @@ class Vector extends Matrix
      */
     public function set($i, $value)
     {
-        return parent::set($i, 0, $value);
+        parent::set($i, 0, $value);
+        return $this;
     }
 
     /**
@@ -72,6 +81,22 @@ class Vector extends Matrix
 
         foreach ($this->data as $i => $row) {
             $result[$i] = current($row);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param callable $f
+     * @return Vector
+     */
+    public function apply(Callable $f)
+    {
+        $result = clone $this;
+        $size = $this->getSize();
+
+        for ($i = 0; $i < $size; $i++) {
+            $result->set($i, $f($this->data[$i][0]));
         }
 
         return $result;
